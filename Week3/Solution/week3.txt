@@ -1,0 +1,251 @@
+import sqlite3 as sq
+-> making connection with database using connect()
+
+con = sq.connect('EMS.db')
+->making cursor on con object
+
+cur = con.cursor()
+-> query-1 create table query and execute it using execute()
+
+query='''create table if not exists employee 
+        (eid int primary key,
+         ename text,
+         dept text,
+         basic int,
+         branch text)'''
+cur.execute(query)
+con.commit()
+->Query-2 function to insert 5 record in table
+
+def insertemp(n):
+    l=[]
+    query=f"insert into Employee values(?,?,?,?,?)"
+       
+    for i in range(n):
+        eid=int(input("Enter Employee id:"))
+        ename=input("Enter Employee name ")
+        dept=input("Enter Employee department:")
+        basic=int(input("Enter Employee basic salary:"))
+        branch=input("Enter Employee branch:")
+        t=(eid,ename,dept,basic,branch)
+        l.append(t)
+    cur.executemany(query,l)
+    con.commit()
+-> Query-3 update record of employee who are from surat increment 10% in basic
+
+def updatesal():
+    query=f"update Employee set basic=basic+basic*0.1 where branch='surat'"
+    cur.execute(query)
+    con.commit()
+->Query-4 print all record
+
+def displayrecord():
+    query=f"select * from Employee"
+    cur.execute(query)
+    data=cur.fetchall()
+    for i in data:
+        print("Employee id:{}\nEmployee name:{}\nEmployee department:{}\nEmployee Basic:{}\nEmployee branch:{}".format(i[0],i[1],i[2],i[3],i[4])) 
+->Query-5 print record whose department is 'hr' or 'it'
+
+def deptrecord():
+    query=f"select * from Employee where dept in ('hr','it','HR','IT')"
+    cur.execute(query)
+    data=cur.fetchall()
+    for i in data:
+        print("Employee id:{}\nEmployee name:{}\nEmployee department:{}\nEmployee Basic:{}\nEmployee branch:{}".format(i[0],i[1],i[2],i[3],i[4])) 
+-> Query-6 record in sorting order of department
+
+def sortrecorddept():
+    query=f"select * from Employee order by dept"
+    cur.execute(query)
+    data=cur.fetchall()
+    for i in data:
+        print("Employee id:{}\nEmployee name:{}\nEmployee department:{}\nEmployee Basic:{}\nEmployee branch:{}".format(i[0],i[1],i[2],i[3],i[4])) 
+-> Query-7 records where basic is >6000
+
+def recordbasicgreaterthan():
+    query=f"select * from Employee where basic>6000"
+    cur.execute(query)
+    data=cur.fetchall()
+    for i in data:
+        print("Employee id:{}\nEmployee name:{}\nEmployee department:{}\nEmployee Basic:{}\nEmployee branch:{}".format(i[0],i[1],i[2],i[3],i[4])) 
+-> Query-8 records where employee's name second character is 'r'
+
+def sortrecorddept():
+    query=f"select * from Employee where ename like '_r%'"
+    cur.execute(query)
+    data=cur.fetchall()
+    for i in data:
+        print("Employee id:{}\nEmployee name:{}\nEmployee department:{}\nEmployee Basic:{}\nEmployee branch:{}".format(i[0],i[1],i[2],i[3],i[4])) 
+-> Query-9 grouping record of employee who are from "account" and "inventory"
+
+def groupingrecord():
+    query=f"select dept,count(*) as count  from Employee where dept in ('account','inventory')"
+    cur.execute(query)
+    data=cur.fetchall()
+    for i in data:
+        print("\nEmployee department:{}\ncount :{}".format(i[0],i[1])) 
+-> Query-10 print record based on branch name in descending order.
+
+def orderbydesc():
+    query=f"select * from Employee order by branch desc"
+    cur.execute(query)
+    data=cur.fetchall()
+    for i in data:
+        print("Employee id:{}\nEmployee name:{}\nEmployee department:{}\nEmployee Basic:{}\nEmployee branch:{}".format(i[0],i[1],i[2],i[3],i[4])) 
+-> call all function
+
+insertemp(5)
+Enter Employee id:1
+Enter Employee name Dhruv
+Enter Employee department:hr
+Enter Employee basic salary:20000
+Enter Employee branch:surat
+Enter Employee id:2
+Enter Employee name Zeel
+Enter Employee department:account
+Enter Employee basic salary:20000
+Enter Employee branch:vyara
+Enter Employee id:3
+Enter Employee name:Kunj
+Enter Employee department:hr
+Enter Employee basic salary:30000
+Enter Employee branch:Surat
+Enter Employee id:4
+Enter Employee name Krunal
+Enter Employee department:account
+Enter Employee basic salary:3000
+Enter Employee branch:surat
+Enter Employee id:5
+Enter Employee name Rajdip
+Enter Employee department:inventory
+Enter Employee basic salary:15000
+Enter Employee branch:bardoli
+updatesal()
+displayrecord()
+Employee id:1
+Employee name:om
+Employee department:account
+Employee Basic:15000
+Employee branch:sueat
+Employee id:2
+Employee name:sai
+Employee department:hr
+Employee Basic:20000
+Employee branch:bardoli
+Employee id:3
+Employee name:pratham
+Employee department:it
+Employee Basic:25000
+Employee branch:mandvi
+Employee id:4
+Employee name:ram
+Employee department:inventory
+Employee Basic:3630
+Employee branch:surat
+Employee id:5
+Employee name:raj
+Employee department:account
+Employee Basic:5000
+Employee branch:bardoli
+sortrecorddept()
+Employee id:1
+Employee name:om
+Employee department:account
+Employee Basic:15000
+Employee branch:sueat
+Employee id:5
+Employee name:raj
+Employee department:account
+Employee Basic:5000
+Employee branch:bardoli
+Employee id:2
+Employee name:sai
+Employee department:hr
+Employee Basic:20000
+Employee branch:bardoli
+Employee id:4
+Employee name:ram
+Employee department:inventory
+Employee Basic:3630
+Employee branch:surat
+Employee id:3
+Employee name:pratham
+Employee department:it
+Employee Basic:25000
+Employee branch:mandvi
+recordbasicgreaterthan()
+Employee id:1
+Employee name:om
+Employee department:account
+Employee Basic:15000
+Employee branch:sueat
+Employee id:2
+Employee name:sai
+Employee department:hr
+Employee Basic:20000
+Employee branch:bardoli
+Employee id:3
+Employee name:pratham
+Employee department:it
+Employee Basic:25000
+Employee branch:mandvi
+sortrecorddept()
+Employee id:1
+Employee name:om
+Employee department:account
+Employee Basic:15000
+Employee branch:sueat
+Employee id:5
+Employee name:raj
+Employee department:account
+Employee Basic:5000
+Employee branch:bardoli
+Employee id:2
+Employee name:sai
+Employee department:hr
+Employee Basic:20000
+Employee branch:bardoli
+Employee id:4
+Employee name:ram
+Employee department:inventory
+Employee Basic:3630
+Employee branch:surat
+Employee id:3
+Employee name:pratham
+Employee department:it
+Employee Basic:25000
+Employee branch:mandvi
+groupingrecord()
+Employee department:account
+count :3
+orderbydesc()
+Employee id:4
+Employee name:ram
+Employee department:inventory
+Employee Basic:3630
+Employee branch:surat
+Employee id:1
+Employee name:om
+Employee department:account
+Employee Basic:5000
+Employee branch:sueat
+Employee id:3
+Employee name:sai
+Employee department:account
+Employee Basic:15000
+Employee branch:surat
+Employee id:2
+Employee name:ram
+Employee department:hr
+Employee Basic:20000
+Employee branch:bardoli
+Employee id:5
+Employee name:Zeel
+Employee department:hr
+Employee Basic:15000
+Employee branch:surat
+con.commit()
+-> close the connection with database
+
+con.close()
